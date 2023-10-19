@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  email     String      @db.VarChar(64)
+  projects  Project[]
+}
+
+model Project {
+  id        Int             @id @default(autoincrement())
+  key       String          @db.VarChar(64) /// access-key
+  title     String          @unique @db.VarChar(255)
+  userId    Int
+  user      User              @relation(fields: [userId], references: [id])
+  schemas   ProjectSchema[]   @relation()
+  achs      Achivement[]      @relation()
+  stats     Stats[]           @relation()
+
+  /// styles for achivement-frame
+  css Json
+}
+
+model ProjectSchema {
+  id          Int                     @id @default(autoincrement())
+  projectId   Int
+  project     Project                 @relation(fields: [projectId], references: [id])
+  elements    ProjectSchemaElements[] @relation()
+  condition   AchivementCondition[]   @relation()
+}
+
+model ProjectSchemaElements {
+  id        Int               @id @default(autoincrement())
+  schemaId  Int
+  schema    ProjectSchema     @relation(fields: [schemaId], references: [id])
+  elemKey   String            @db.VarChar(64)
+  elemType  SchemaElementType
+  default   String
+  comment   String            @db.VarChar(255)
+}
+
+enum SchemaElementType {
+  STR
+  INT
+  FLOAT
+  BOOL
+}
+
+model Achivement {
+  id        Int                   @id @default(autoincrement())
+  project   Project               @relation(fields: [projectId], references: [id])
+  projectId Int                   @unique
+  title     String                @unique @db.VarChar(64)
+  desc      String?               @db.VarChar(255)
+  imgPath   String?
+  imgSize   Int?
+  condition AchivementCondition[] @relation()
+  stats     Stats[]               @relation()
+}
+
+model AchivementCondition {
+  id              Int           @id @default(autoincrement())
+  achivementId    Int
+  achivement      Achivement    @relation(fields: [achivementId], references: [id])
+  condition       Json /// mongo query language
+  projectSchemaId Int
+  projectSchema   ProjectSchema @relation(fields: [projectSchemaId], references: [id])
+}
+
+model Stats {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  projectId    Int
+  project      Project    @relation(fields: [projectId], references: [id])
+  foreignId    Int
+  achivementId Int
+  achivement   Achivement @relation(fields: [achivementId], references: [id])
+}
