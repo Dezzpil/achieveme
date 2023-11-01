@@ -17,35 +17,35 @@ model User {
 }
 
 model Project {
-  id        Int             @id @default(autoincrement())
-  key       String          @db.VarChar(64) /// access-key
-  title     String          @unique @db.VarChar(255)
+  id        Int               @id @default(autoincrement())
+  key       String            @db.VarChar(64) /// access-key
+  title     String            @unique @db.VarChar(255)
   userId    Int
   user      User              @relation(fields: [userId], references: [id])
   schemas   ProjectSchema[]   @relation()
-  achs      Achivement[]      @relation()
+  achs      Achievement[]     @relation()
   stats     Stats[]           @relation()
 
-  /// styles for achivement-frame
-  css Json
+
+  css       Json              /// styles for achivement-frame
 }
 
 model ProjectSchema {
-  id          Int                     @id @default(autoincrement())
+  id          Int                       @id @default(autoincrement())
   projectId   Int
-  project     Project                 @relation(fields: [projectId], references: [id])
-  elements    ProjectSchemaElements[] @relation()
-  condition   AchivementCondition[]   @relation()
+  project     Project                   @relation(fields: [projectId], references: [id])
+  elements    ProjectSchemaElements[]   @relation()
+  condition   AchievementCondition[]    @relation()
 }
 
 model ProjectSchemaElements {
-  id        Int               @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   schemaId  Int
-  schema    ProjectSchema     @relation(fields: [schemaId], references: [id])
-  elemKey   String            @db.VarChar(64)
+  schema    ProjectSchema       @relation(fields: [schemaId], references: [id])
+  elemKey   String              @db.VarChar(64)
   elemType  SchemaElementType
   default   String
-  comment   String            @db.VarChar(255)
+  comment   String              @db.VarChar(255)
 }
 
 enum SchemaElementType {
@@ -55,23 +55,23 @@ enum SchemaElementType {
   BOOL
 }
 
-model Achivement {
-  id        Int                   @id @default(autoincrement())
-  project   Project               @relation(fields: [projectId], references: [id])
-  projectId Int                   @unique
-  title     String                @unique @db.VarChar(64)
-  desc      String?               @db.VarChar(255)
+model Achievement {
+  id        Int                     @id @default(autoincrement())
+  project   Project                 @relation(fields: [projectId], references: [id])
+  projectId Int                     @unique
+  title     String                  @unique @db.VarChar(64)
+  desc      String?                 @db.VarChar(255)
   imgPath   String?
   imgSize   Int?
-  condition AchivementCondition[] @relation()
-  stats     Stats[]               @relation()
+  condition AchievementCondition[]  @relation()
+  stats     Stats[]                 @relation()
 }
 
-model AchivementCondition {
+model AchievementCondition {
   id              Int           @id @default(autoincrement())
   achivementId    Int
-  achivement      Achivement    @relation(fields: [achivementId], references: [id])
-  condition       Json /// mongo query language
+  achivement      Achievement   @relation(fields: [achivementId], references: [id])
+  condition       Json          /// mongo query language
   projectSchemaId Int
   projectSchema   ProjectSchema @relation(fields: [projectSchemaId], references: [id])
 }
@@ -83,5 +83,5 @@ model Stats {
   project      Project    @relation(fields: [projectId], references: [id])
   foreignId    Int
   achivementId Int
-  achivement   Achivement @relation(fields: [achivementId], references: [id])
+  achivement   Achievement @relation(fields: [achivementId], references: [id])
 }
