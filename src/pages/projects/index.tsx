@@ -4,6 +4,8 @@ import React from "react";
 import {PrismaClient} from "@prisma/client";
 import type { Project } from "@prisma/client";
 
+import Link from 'next/link';
+
 interface Props {
   projects: Project[];
 }
@@ -14,9 +16,11 @@ const Projects: React.FC<Props> = ({ projects }) => {
     <Layout>
       <h2>Проекты</h2>
       {projects.map(p => (
-        <div key={p.id}>
-          <small>{p.key}</small>
-          <p>{p.title}</p>
+        <div key={p.id} className="mb-2">
+            <Link href={`/projects/${p.id}`}>{p.title}</Link>
+            <div className="text-muted">
+              <small>{p.key}</small>
+            </div>
         </div>
       ))}
     </Layout>

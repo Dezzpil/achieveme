@@ -34,25 +34,8 @@ model ProjectSchema {
   id          Int                       @id @default(autoincrement())
   projectId   Int
   project     Project                   @relation(fields: [projectId], references: [id])
-  elements    ProjectSchemaElements[]   @relation()
+  definition  Json                      // JSON Schema
   condition   AchievementCondition[]    @relation()
-}
-
-model ProjectSchemaElements {
-  id        Int                 @id @default(autoincrement())
-  schemaId  Int
-  schema    ProjectSchema       @relation(fields: [schemaId], references: [id])
-  elemKey   String              @db.VarChar(64)
-  elemType  SchemaElementType
-  default   String
-  comment   String              @db.VarChar(255)
-}
-
-enum SchemaElementType {
-  STR
-  INT
-  FLOAT
-  BOOL
 }
 
 model Achievement {
