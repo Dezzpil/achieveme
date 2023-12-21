@@ -2,8 +2,12 @@ import { PrismaClient } from "@prisma/client";
 import React from "react";
 import Link from "next/link";
 import JSON5 from "json5";
+import { getServerSession } from "next-auth";
 
 export default async function PageHome() {
+  const session = await getServerSession();
+  console.log(session);
+
   const prisma = new PrismaClient();
   const userId = 1;
   const projects = await prisma.project.findMany({ where: { userId } });

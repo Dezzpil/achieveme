@@ -11,3 +11,12 @@ services:
       - ./data/db:/var/lib/postgresql
     ports:
       - '5434:5432'
+  mongo:
+    image: 'mongo:7'
+    restart: always
+    volumes:
+      - ./data/mongo:/data/db
+    expose:
+      - 27017
+    ports:
+      - '27020:27017'
