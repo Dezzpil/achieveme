@@ -18,7 +18,9 @@ export function Layout({ children }: Props) {
           </a>
 
           {session.status === "authenticated" ? (
-            <span>🤓 {session.data?.user?.name}</span>
+            <Link href={"/api/auth/signout"}>
+              🤓 {session.data?.user?.name}
+            </Link>
           ) : (
             ""
           )}
